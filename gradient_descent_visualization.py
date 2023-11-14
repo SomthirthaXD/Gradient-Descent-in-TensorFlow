@@ -1,26 +1,24 @@
-
-
 # This is the section of dependency imports
 import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
 # This is a randomly generated data
-np.random.seed(50)
-X=2*np.random.rand(100, 1)
-y=4+3*X+np.random.randn(100, 1)
+X=np.random.rand(100)
+y=4+3*X+np.random.rand(100) # y=4+3X+c
 
 # This is a Sequential Model
+
+# Training loop
+epochs=100
 model=tf.keras.Sequential([tf.keras.layers.Input(shape=(1,)), tf.keras.layers.Dense(units=1, activation='linear')])
 
 # Model is compiled here
-optimizer=tf.keras.optimizers.experimental.SGD()
+optimizer=tf.keras.optimizers.experimental.SGD() # Parameter decay=lr/epochs can give a learning rate scheduled decay per epoch
 model.compile(optimizer=optimizer, loss='mse')
 
 plt.scatter(X, y, label='True')
 
-# Training loop
-epochs=50
 loss=[]
 print("Training Epoch:", end=" ")
 for epoch in range(epochs):
@@ -39,7 +37,7 @@ for epoch in range(epochs):
       plt.plot(X, model.predict(X, verbose=0), label=f'Pred {epochs}')
     loss.append(model.evaluate(X, y, verbose=0))
 
-plt.title("Target vs Predictions in epochs 0 and 50")
+plt.title(f"Target vs Predictions in epochs 0 and {epochs}")
 plt.legend()
 plt.show()
 plt.close()
@@ -50,3 +48,5 @@ for epoch in range(epochs):
   plt.scatter(epoch, loss[epoch])
 plt.show()
 plt.close()
+print("Initial loss:", loss[0])
+print("Final loss:", loss[epochs-1])
